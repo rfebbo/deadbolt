@@ -1,0 +1,741 @@
+{
+    "T1": {
+        "Basic Magazine": {
+            "attributes": {
+                "Tier": "1'",
+                "Cost": "500'",
+                "Ammo": "+24",
+                "Weapon Damage": "+15",
+                "component of": "Titanic Magazine'"
+            },
+            "effects": {}
+        },
+        "Close Quarters": {
+            "attributes": {
+                "Tier": "1'",
+                "Cost": "500'",
+                "Bullet Shield Health": "+85 Bullet Shield Health'",
+                "component of": "Point Blank'"
+            },
+            "effects": {
+                "Passive": [
+                    "Passive: Deal additional'",
+                    "<b>'",
+                    "Weapon Damage'",
+                    "</b>'",
+                    "when in'",
+                    "<b>'",
+                    "close range'",
+                    "</b>'",
+                    "to your target.'"
+                ],
+                "Weapon Damage within": [
+                    "+25% Weapon Damage within 15m of target'"
+                ]
+            }
+        },
+        "Headshot Booster": {
+            "attributes": {
+                "Tier": "1'",
+                "Cost": "500'",
+                "Fire Rate": "+4",
+                "Bullet Shield Health": "+40 Bullet Shield Health'",
+                "component of": "Headhunter'"
+            },
+            "effects": {
+                "Passive": [
+                    "Passive: Deal bonus'",
+                    "<b>'",
+                    "Weapon Damage'",
+                    "</b>'",
+                    "with'",
+                    "<b>'",
+                    "headshots'",
+                    "</b>'",
+                    ".'"
+                ]
+            }
+        },
+        "High-Velocity Mag": {
+            "attributes": {
+                "Tier": "1'",
+                "Cost": "500'",
+                "Weapon Damage": "+12",
+                "Bullet Shield Health": "+50 Bullet Shield Health'",
+                "component of": "Pristine Emblem'"
+            },
+            "effects": {}
+        },
+        "Hollow Point Ward": {
+            "attributes": {
+                "Tier": "1'",
+                "Cost": "500'"
+            },
+            "effects": {
+                "Passive": [
+                    "Passive: When you are'",
+                    "<b>'",
+                    "above 60% health'",
+                    "</b>'",
+                    ", deal additional'",
+                    "<b>'",
+                    "Weapon Damage'",
+                    "</b>'",
+                    ".'"
+                ]
+            }
+        },
+        "Monster Rounds": {
+            "attributes": {
+                "Tier": "1'",
+                "Cost": "500'",
+                "Weapon Damage": "+35",
+                "Bullet Resist": "+30",
+                "Bonus Health": "+50 Bonus Health'"
+            },
+            "effects": {}
+        },
+        "Rapid Rounds": {
+            "attributes": {
+                "Tier": "1'",
+                "Cost": "500'",
+                "Fire Rate": "+9"
+            },
+            "effects": {}
+        },
+        "Restorative Shot": {
+            "attributes": {
+                "Tier": "1'",
+                "Cost": "500'",
+                "Bullet Resist": "+7",
+                "Weapon Damage": "+8"
+            },
+            "effects": {
+                "Passive": [
+                    "Passive: Your next bullet will'",
+                    "<b>'",
+                    "heal'",
+                    "</b>'",
+                    "you based on what target you hit.'"
+                ]
+            }
+        }
+    },
+    "T2": {
+        "Active Reload": {
+            "attributes": {
+                "Tier": "2'",
+                "Cost": "1,250'",
+                "Weapon Damage": "+10"
+            },
+            "effects": {
+                "Passive": [
+                    "Passive: While reloading, pressing [R] during the highlighted portion will'",
+                    "<b>'",
+                    "instantly finish your reload'",
+                    "</b>'",
+                    "and grant you'",
+                    "<b>'",
+                    "Fire Rate'",
+                    "</b>'",
+                    "and'",
+                    "<b>'",
+                    "Bullet Lifesteal'",
+                    "</b>'"
+                ],
+                "Duration": []
+            }
+        },
+        "Berserker": {
+            "attributes": {
+                "Tier": "2'",
+                "Cost": "1,250'",
+                "Ammo": "+4 Ammo'",
+                "Bullet Resist": "+7"
+            },
+            "effects": {
+                "Passive": [
+                    "Passive: Your'",
+                    "<b>'",
+                    "Weapon Damage'",
+                    "</b>'",
+                    "increases as you take sustained damage.'"
+                ],
+                "Duration": []
+            }
+        },
+        "Kinetic Dash": {
+            "attributes": {
+                "Tier": "2'",
+                "Cost": "1,250'",
+                "Bonus Health": "+100 Bonus Health'"
+            },
+            "effects": {
+                "Passive": [
+                    "Passive: Your next'",
+                    "<b>'",
+                    "Dash-Jump'",
+                    "</b>'",
+                    "does not cost an extra stamina and you gain'",
+                    "<b>'",
+                    "Fire Rate'",
+                    "</b>'",
+                    "and bonus'",
+                    "<b>'",
+                    "Ammo'",
+                    "</b>'",
+                    "until your next reload. Lasts up to 8s.'"
+                ],
+                "Duration": []
+            }
+        },
+        "Long Range": {
+            "attributes": {
+                "Tier": "2'",
+                "Cost": "1,250'",
+                "Ammo": "+20",
+                "Bullet Shield Health": "+140 Bullet Shield Health'",
+                "component of": "Sharpshooter'"
+            },
+            "effects": {
+                "Passive": [
+                    "Passive: Deal additional'",
+                    "<b>'",
+                    "Weapon Damage'",
+                    "</b>'",
+                    "when'",
+                    "<b>'",
+                    "beyond a minimum distance'",
+                    "</b>'",
+                    "from your target.'"
+                ]
+            }
+        },
+        "Melee Charge": {
+            "attributes": {
+                "Tier": "2'",
+                "Cost": "1,250'",
+                "Weapon Damage": "+15",
+                "Bonus Health": "+100 Bonus Health'"
+            },
+            "effects": {
+                "Passive": [
+                    "Passive: Your next'",
+                    "<b>'",
+                    "Heavy Melee'",
+                    "</b>'",
+                    "attack against an enemy'",
+                    "<b>'",
+                    "deals increased damage'",
+                    "</b>'",
+                    "and either'",
+                    "<b>'",
+                    "reload your weapon instantly'",
+                    "</b>'",
+                    "or give you up to'",
+                    "<b>'",
+                    "+100% bonus ammo.'",
+                    "</b>'",
+                    "Only activates when Bonus Ammo is not full.'"
+                ]
+            }
+        },
+        "Mystic Shot": {
+            "attributes": {
+                "Tier": "2'",
+                "Cost": "1,250'",
+                "Weapon Damage": "+12"
+            },
+            "effects": {
+                "Passive": [
+                    "Passive: Your next bullet deals bonus'",
+                    "<b>'",
+                    "Spirit Damage'",
+                    "</b>'",
+                    ".'"
+                ]
+            }
+        },
+        "Slowing Bullets": {
+            "attributes": {
+                "Tier": "2'",
+                "Cost": "1,250'",
+                "Weapon Damage": "+16",
+                "component of": "Silencer'"
+            },
+            "effects": {
+                "Passive": [
+                    "Passive: Your bullets apply'",
+                    "<b>'",
+                    "Movement Slow'",
+                    "</b>'",
+                    ".'"
+                ],
+                "Duration": []
+            }
+        },
+        "Soul Shredder Bullets": {
+            "attributes": {
+                "Tier": "2'",
+                "Cost": "1,250'",
+                "Weapon Damage": "+7"
+            },
+            "effects": {
+                "Passive": [
+                    "Passive: Your bullets apply a debuff that amplifies your'",
+                    "<b>'",
+                    "Spirit Damage'",
+                    "</b>'",
+                    "against the target and grants you'",
+                    "<b>'",
+                    "Spirit Lifesteal'",
+                    "</b>'",
+                    "against them.'"
+                ],
+                "Duration": []
+            }
+        },
+        "Swift Striker": {
+            "attributes": {
+                "Tier": "2'",
+                "Cost": "1,250'",
+                "Fire Rate": "+22",
+                "Ammo": "+10",
+                "Bullet Resist": "-5"
+            },
+            "effects": {}
+        },
+        "Fleetfoot": {
+            "attributes": {
+                "Tier": "2'",
+                "Cost": "1,250'",
+                "Bonus Health": "+90 Bonus Health'"
+            },
+            "effects": {
+                "Passive": [
+                    "Passive: Removes the'",
+                    "<b>'",
+                    "Movement Speed'",
+                    "</b>'",
+                    "penalty while shooting.'"
+                ],
+                "Duration": []
+            }
+        }
+    },
+    "T3": {
+        "Burst Fire": {
+            "attributes": {
+                "Tier": "3'",
+                "Cost": "3,000'",
+                "Fire Rate": "+12",
+                "Bonus Health": "+70 Bonus Health'"
+            },
+            "effects": {
+                "Passive": [
+                    "Passive: Briefly gain'",
+                    "<b>'",
+                    "Fire Rate'",
+                    "</b>'",
+                    "and'",
+                    "<b>'",
+                    "Move Speed'",
+                    "</b>'",
+                    "when one of your bullets hits an enemy hero.'"
+                ],
+                "Duration": []
+            }
+        },
+        "Escalating Resilience": {
+            "attributes": {
+                "Tier": "3'",
+                "Cost": "3,000'",
+                "Fire Rate": "+12",
+                "Weapon Damage": "+14"
+            },
+            "effects": {
+                "Passive": [
+                    "Passive: Grants'",
+                    "<b>'",
+                    "Bullet Resist'",
+                    "</b>'",
+                    "when your bullets hit an enemy hero.'",
+                    "<b>'",
+                    "Each shot can only grant one stack.'",
+                    "</b>'"
+                ],
+                "Bullet Resist": [
+                    "+2% Bullet Resist per Stack'"
+                ],
+                "Duration": []
+            }
+        },
+        "Headhunter": {
+            "attributes": {
+                "Tier": "3'",
+                "Cost": "3,500'",
+                "Weapon Damage": "+15",
+                "Bullet Shield Health": "150 Bullet Shield Health'",
+                "Fire Rate": "+5"
+            },
+            "effects": {
+                "Passive": [
+                    "Passive: Landing a headshot deals bonus damage, heals you for a portion of your Max HP, and briefly grants you bonus movement speed.'"
+                ],
+                "Duration": []
+            }
+        },
+        "Hunters Aura": {
+            "attributes": {},
+            "effects": {}
+        },
+        "Intensifying Magazine": {
+            "attributes": {
+                "Tier": "3'",
+                "Cost": "3,000'",
+                "Ammo": "+25",
+                "Weapon Damage": "+20"
+            },
+            "effects": {
+                "Passive": [
+                    "Passive: Increases'",
+                    "<b>'",
+                    "Weapon Damage'",
+                    "</b>'",
+                    "as you continuously fire your weapon.'"
+                ]
+            }
+        },
+        "Point Blank": {
+            "attributes": {
+                "Tier": "3'",
+                "Cost": "3,500'",
+                "Bullet Resist": "+15"
+            },
+            "effects": {
+                "Passive": [
+                    "Passive: When in'",
+                    "<b>'",
+                    "close range'",
+                    "</b>'",
+                    "to your target, gain'",
+                    "<b>'",
+                    "Weapon Damage'",
+                    "</b>'",
+                    "and your bullets apply a'",
+                    "<b>'",
+                    "Movement Slow'",
+                    "</b>'",
+                    ".'"
+                ],
+                "Duration": []
+            }
+        },
+        "Pristine Emblem": {
+            "attributes": {
+                "Tier": "3'",
+                "Cost": "3,500'",
+                "Weapon Damage": "+25"
+            },
+            "effects": {
+                "Passive": [
+                    "Passive: Your attacks have additional'",
+                    "<b>'",
+                    "Weapon Damage'",
+                    "</b>'",
+                    "against'",
+                    "<b>'",
+                    "enemies above 50% health'",
+                    "</b>'",
+                    ".'"
+                ]
+            }
+        },
+        "Sharpshooter": {
+            "attributes": {
+                "Tier": "3'",
+                "Cost": "4,250'",
+                "Ammo": "+20",
+                "Bullet Shield Health": "+200 Bullet Shield Health'"
+            },
+            "effects": {
+                "Passive": [
+                    "Passive: Deal additional'",
+                    "<b>'",
+                    "Weapon Damage'",
+                    "</b>'",
+                    "when'",
+                    "<b>'",
+                    "beyond a minimum distance'",
+                    "</b>'",
+                    "from your target.'"
+                ]
+            }
+        },
+        "Tesla Bullets": {
+            "attributes": {
+                "Tier": "3'",
+                "Cost": "3,000'",
+                "Fire Rate": "+14"
+            },
+            "effects": {
+                "Passive": [
+                    "Passive: Your bullets have a chance to'",
+                    "<b>'",
+                    "shock'",
+                    "</b>'",
+                    "your target. The'",
+                    "<b>'",
+                    "shock'",
+                    "</b>'",
+                    "will jump to a nearby enemy.'"
+                ]
+            }
+        },
+        "Titanic Magazine": {
+            "attributes": {
+                "Tier": "3'",
+                "Cost": "3,500'",
+                "Ammo": "+120",
+                "Weapon Damage": "+18",
+                "Bullet Resist": "+15"
+            },
+            "effects": {}
+        },
+        "Toxic Bullets": {
+            "attributes": {
+                "Tier": "3'",
+                "Cost": "3,000'",
+                "Bonus Health": "+100 Bonus Health'"
+            },
+            "effects": {
+                "Passive": [
+                    "Passive: Your bullets build up a'",
+                    "<b>'",
+                    "Bleed'",
+                    "</b>'",
+                    "on enemies, causing them to lose a'",
+                    "<b>'",
+                    "percentage of their current health'",
+                    "</b>'",
+                    "over time. Also applies'",
+                    "<b>'",
+                    "Healing Reduction'",
+                    "</b>'",
+                    "on the bleeding target.'"
+                ],
+                "Duration": []
+            }
+        },
+        "Alchemical Fire": {
+            "attributes": {
+                "Tier": "3'",
+                "Cost": "3,000'",
+                "Bullet Shield Health": "+225 Bullet Shield Health'",
+                "Weapon Damage": "+14"
+            },
+            "effects": {
+                "Duration": []
+            }
+        },
+        "Heroic Aura": {
+            "attributes": {
+                "Tier": "3'",
+                "Cost": "3,000'",
+                "Bonus Health": "+150 Bonus Health'"
+            },
+            "effects": {
+                "Passive": [
+                    "Passive: Provides'",
+                    "<b>'",
+                    "Fire Rate'",
+                    "</b>'",
+                    "to nearby player minions.'"
+                ],
+                "Duration": []
+            }
+        },
+        "Warp Stone": {
+            "attributes": {
+                "Tier": "3'",
+                "Cost": "3,000'",
+                "Weapon Damage": "+20"
+            },
+            "effects": {
+                "Bullet Resist": [
+                    "+30% Bullet Resist (conditional)'"
+                ],
+                "Duration": []
+            }
+        }
+    },
+    "T4": {
+        "Crippling Headshot": {
+            "attributes": {
+                "Tier": "4'",
+                "Cost": "6,200'",
+                "Weapon Damage": "+20"
+            },
+            "effects": {
+                "Passive": [
+                    "Passive:'",
+                    "<b>'",
+                    "Headshots'",
+                    "</b>'",
+                    "reduce target's\"",
+                    "<b>'",
+                    "Bullet and Spirit Resist'",
+                    "</b>'",
+                    ".'"
+                ],
+                "Bullet Resist": [
+                    "24% Bullet Resist Reduction'"
+                ],
+                "Duration": []
+            }
+        },
+        "Frenzy": {
+            "attributes": {
+                "Tier": "4'",
+                "Cost": "6,200'",
+                "Ammo": "+12 Ammo'",
+                "Weapon Damage": "+30",
+                "Bonus Health": "+200 Bonus Health'"
+            },
+            "effects": {
+                "Passive": [
+                    "Passive: While you are'",
+                    "<b>'",
+                    "below 40% health'",
+                    "</b>'",
+                    ", you gain stat bonuses'"
+                ],
+                "Bullet Resist": [
+                    "45% Bullet Resist (conditional)'"
+                ]
+            }
+        },
+        "Glass Cannon": {
+            "attributes": {
+                "Tier": "4'",
+                "Cost": "6,200'",
+                "Weapon Damage": "+70",
+                "Fire Rate": "+10"
+            },
+            "effects": {
+                "Passive": [
+                    "Passive: Each hero kill grants'",
+                    "<b>'",
+                    "permanent Weapon Damage'",
+                    "</b>'",
+                    "(up to a max of 7 times). Death results in the loss of 1 stack.'"
+                ]
+            }
+        },
+        "Lucky Shot": {
+            "attributes": {
+                "Tier": "4'",
+                "Cost": "6,200'",
+                "Ammo": "+30"
+            },
+            "effects": {
+                "Passive": [
+                    "Passive: Your bullets have a chance to be empowered, causing them to deal'",
+                    "<b>'",
+                    "bonus damage'",
+                    "</b>'",
+                    "and'",
+                    "<b>'",
+                    "Slow'",
+                    "</b>'",
+                    "on hit.'"
+                ],
+                "Duration": []
+            }
+        },
+        "Ricochet": {
+            "attributes": {
+                "Tier": "4'",
+                "Cost": "6,200'",
+                "Ammo": "+35",
+                "Fire Rate": "+10",
+                "Bonus Health": "+150 Bonus Health'"
+            },
+            "effects": {
+                "Passive": [
+                    "Passive: Your bullets will'",
+                    "<b>'",
+                    "ricochet'",
+                    "</b>'",
+                    "on enemies near your target,'",
+                    "<b>'",
+                    "applying any bullet procs'",
+                    "</b>'",
+                    "and'",
+                    "<b>'",
+                    "dealing a percentage of the original damage.'",
+                    "</b>'"
+                ]
+            }
+        },
+        "Siphon Bullets": {
+            "attributes": {
+                "Tier": "4'",
+                "Cost": "6,200'",
+                "Bullet Resist": "+18"
+            },
+            "effects": {
+                "Passive": [
+                    "Passive: Your bullets temporarily'",
+                    "<b>'",
+                    "steal Max HP'",
+                    "</b>'",
+                    "from enemies. Enemies regain their stolen health when the debuff expires. Permanently steal one stack of health if a siphoned target dies and lose 2 stacks if you die.'"
+                ],
+                "Duration": []
+            }
+        },
+        "Spiritual Overflow": {
+            "attributes": {
+                "Tier": "4'",
+                "Cost": "6,200'",
+                "Fire Rate": "+20"
+            },
+            "effects": {
+                "Passive": [
+                    "Passive: Gain bonus'",
+                    "<b>'",
+                    "Spirit Power'",
+                    "</b>'",
+                    "by'",
+                    "<b>'",
+                    "charging up'",
+                    "</b>'",
+                    "with your bullets on enemy heroes.'"
+                ],
+                "Duration": []
+            }
+        },
+        "Silencer": {
+            "attributes": {
+                "Tier": "4'",
+                "Cost": "7,450'",
+                "Weapon Damage": "+20"
+            },
+            "effects": {
+                "Duration": []
+            }
+        },
+        "Vampiric Burst": {
+            "attributes": {
+                "Tier": "4'",
+                "Cost": "6,200'",
+                "Weapon Damage": "+25",
+                "Bonus Health": "150 Bonus Health'"
+            },
+            "effects": {
+                "Duration": []
+            }
+        }
+    }
+}
