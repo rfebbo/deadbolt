@@ -2,8 +2,8 @@
     "Abrams": {
         "stats": {
             "DPS": "63",
-            "Health": "600",
-            "Speed": "6.5",
+            "Health": "570",
+            "Speed": "6.8",
             "Stamina": "3"
         },
         "weapon": {
@@ -20,14 +20,14 @@
             "Health Regen": "1",
             "Bullet Resist": "0",
             "Spirit Resist": "0",
-            "move Speed": "6.5",
+            "move Speed": "6.8",
             "Sprint Speed": "0",
             "Stamina": "3"
         },
         "level up": {
             "bullet damage": "+0.32",
             "base melee damage": "+3.4",
-            "base health": "+32"
+            "base health": "+34"
         },
         "advanced": {
             "Time per bullet": "0.6",
@@ -53,7 +53,7 @@
         "stats": {
             "DPS": "66",
             "Health": "650",
-            "Speed": "6.2",
+            "Speed": "6.6",
             "Stamina": "3"
         },
         "weapon": {
@@ -70,7 +70,7 @@
             "Health Regen": "3",
             "Bullet Resist": "10",
             "Spirit Resist": "0",
-            "move Speed": "6.5",
+            "move Speed": "6.6",
             "Sprint Speed": "3",
             "Stamina": "3"
         },
@@ -105,7 +105,7 @@
         "stats": {
             "DPS": "52",
             "Health": "650",
-            "Speed": "6.5",
+            "Speed": "6.8",
             "Stamina": "3"
         },
         "weapon": {
@@ -122,7 +122,7 @@
             "Health Regen": "2",
             "Bullet Resist": "0",
             "Spirit Resist": "0",
-            "move Speed": "6.5",
+            "move Speed": "6.8",
             "Sprint Speed": "0",
             "Stamina": "3"
         },
@@ -156,28 +156,26 @@
         "stats": {
             "DPS": "55",
             "Health": "550",
-            "Speed": "6",
-            "Stamina": "3"
+            "Speed": "6.3",
+            "Stamina": "4"
         },
         "weapon": {
             "name": "TheMourningComes",
             "DPS": "55",
-            "Bullet Damage": "22",
+            "Bullet Damage": "30",
             "Ammo": "17",
-            "Bullets per sec": "2.5",
-            "Bullet per sec scaling": "0.006",
+            "Bullets per sec": "1.82",
             "Light Melee": "63",
             "Heavy Melee": "116"
         },
         "vitality": {
-            "Max Health": "650",
+            "Max Health": "550",
             "Health Regen": "3",
-            "Bullet Resist": "10",
+            "Bullet Resist": "0",
             "Spirit Resist": "0",
-            "move Speed": "6",
-            "move Speed scaling": "0.04",
+            "move Speed": "6.3",
             "Sprint Speed": "0",
-            "Stamina": "3"
+            "Stamina": "4"
         },
         "level up": {
             "bullet damage": "+1.8",
@@ -208,7 +206,7 @@
         "stats": {
             "DPS": "56",
             "Health": "500",
-            "Speed": "8",
+            "Speed": "8.3",
             "Stamina": "3"
         },
         "weapon": {
@@ -225,7 +223,7 @@
             "Health Regen": "2",
             "Bullet Resist": "0",
             "Spirit Resist": "0",
-            "move Speed": "8",
+            "move Speed": "8.3",
             "Sprint Speed": "0",
             "Stamina": "3"
         },
@@ -382,7 +380,7 @@
             "Stamina": "3"
         },
         "level up": {
-            "bullet damage": "+1.2",
+            "bullet damage": "+0.9",
             "base melee damage": "+3.4",
             "base health": "+50"
         },
@@ -428,7 +426,7 @@
             "Bullet Resist": "0",
             "Spirit Resist": "0",
             "move Speed": "6",
-            "Sprint Speed": "1",
+            "Sprint Speed": "1.5",
             "Stamina": "3"
         },
         "level up": {
@@ -458,15 +456,15 @@
     },
     "Lash": {
         "stats": {
-            "DPS": "61",
+            "DPS": "55",
             "Health": "550",
             "Speed": "7",
             "Stamina": "3"
         },
         "weapon": {
             "name": "TaleofTheTape",
-            "DPS": "61",
-            "Bullet Damage": "10",
+            "DPS": "55",
+            "Bullet Damage": "9",
             "Ammo": "29",
             "Bullets per sec": "6.12",
             "Light Melee": "63",
@@ -510,7 +508,7 @@
         "stats": {
             "DPS": "89",
             "Health": "550",
-            "Speed": "6.5",
+            "Speed": "6.8",
             "Stamina": "2"
         },
         "weapon": {
@@ -525,8 +523,8 @@
         "vitality": {
             "Max Health": "550",
             "Health Regen": "2",
-            "Bullet Resist": "0",
-            "Spirit Resist": "25",
+            "Bullet Resist": "15",
+            "Spirit Resist": "0",
             "move Speed": "6.5",
             "Sprint Speed": "0",
             "Stamina": "2"
@@ -566,7 +564,7 @@
         "stats": {
             "DPS": "76",
             "Health": "700",
-            "Speed": "7.8",
+            "Speed": "8.1",
             "Stamina": "3"
         },
         "weapon": {
@@ -616,7 +614,7 @@
         "stats": {
             "DPS": "57",
             "Health": "550",
-            "Speed": "6.5",
+            "Speed": "6.8",
             "Stamina": "3"
         },
         "weapon": {
@@ -638,7 +636,7 @@
             "Stamina": "3"
         },
         "level up": {
-            "bullet damage": "+0.42",
+            "bullet damage": "+0.45",
             "base melee damage": "+3.4",
             "base health": "+40"
         },
@@ -656,6 +654,7 @@
             "Bullet lifetime": "2",
             "Bullet gravity scale": "0.1",
             "Bullet range": "6",
+            "Falloff Range": "22m-58m",
             "Burst amount": "5",
             "Burst cycletime": "0.07",
             "Recoil punch": "0.3",
@@ -666,7 +665,7 @@
         "stats": {
             "DPS": "70",
             "Health": "550",
-            "Speed": "7",
+            "Speed": "7.3",
             "Stamina": "3"
         },
         "weapon": {
@@ -706,6 +705,7 @@
             "Bullet lifetime": "2",
             "Bullet gravity scale": "0.8",
             "Bullet range": "6",
+            "Falloff Range": "16m-46m",
             "Burst amount": "1",
             "Burst cycletime": "N/A",
             "Recoil punch": "0.8",
@@ -716,7 +716,7 @@
         "stats": {
             "DPS": "70",
             "Health": "550",
-            "Speed": "7",
+            "Speed": "7.3",
             "Stamina": "3"
         },
         "weapon": {
@@ -730,11 +730,11 @@
         },
         "vitality": {
             "Max Health": "550",
-            "Health Regen": "1.5",
+            "Health Regen": "3",
             "Bullet Resist": "0",
             "Spirit Resist": "0",
-            "move Speed": "7",
-            "move Speed scaling": "0.028",
+            "move Speed": "7.3",
+            "move Speed scaling": "0.02",
             "Sprint Speed": "0",
             "Stamina": "3",
             "Headshot": "Unlisted35%HeadshotResist(Reductioniscalculatedusingthepre-criticalbonusdamage,soresistanceiscloser"
@@ -758,6 +758,7 @@
             "Bullet lifetime": "2",
             "Bullet gravity scale": "0.8",
             "Bullet range": "6",
+            "Falloff Range": "22m-58m",
             "Burst amount": "3",
             "Burst cycletime": "0.08",
             "Recoil punch": "0.2",
@@ -768,7 +769,7 @@
         "stats": {
             "DPS": "60",
             "Health": "600",
-            "Speed": "7",
+            "Speed": "7.3",
             "Stamina": "3"
         },
         "weapon": {
@@ -825,6 +826,7 @@
             "Bullet lifetime secondary": "2",
             "Bullet gravity scale secondary": "0.8",
             "Bullet range secondary": "6",
+            "Falloff Range": "20m-41m",
             "Burst amount secondary": "1",
             "Burst cycletime secondary": "1",
             "Recoil punch secondary": "4",
@@ -835,31 +837,31 @@
         "stats": {
             "DPS": "68",
             "Health": "550",
-            "Speed": "8",
+            "Speed": "9",
             "Stamina": "2"
         },
         "weapon": {
             "name": "Wallflower'sRevenge",
             "DPS": "68",
-            "Bullet Damage": "13",
+            "Bullet Damage": "15",
             "Ammo": "22",
-            "Bullets per sec": "5.26",
+            "Bullets per sec": "3.85",
             "Light Melee": "63",
             "Heavy Melee": "116"
         },
         "vitality": {
             "Max Health": "550",
             "Health Regen": "2",
-            "Bullet Resist": "-10",
+            "Bullet Resist": "0",
             "Spirit Resist": "0",
-            "move Speed": "8",
+            "move Speed": "9",
             "Sprint Speed": "0",
             "Stamina": "2"
         },
         "level up": {
-            "bullet damage": "+1.00Base",
+            "bullet damage": "+0.55Base",
             "base melee damage": "+3.4",
-            "base health": "+20"
+            "base health": "+15"
         },
         "advanced": {
             "Time per bullet": "0.19",
@@ -875,6 +877,7 @@
             "Bullet lifetime": "2",
             "Bullet gravity scale": "0.8",
             "Bullet range": "6",
+            "Falloff Range": "22m-64m",
             "Burst amount": "1",
             "Burst cycletime": "N/A",
             "Recoil punch": "0.15",
@@ -883,15 +886,15 @@
     },
     "Viscous": {
         "stats": {
-            "DPS": "65",
+            "DPS": "60",
             "Health": "550",
-            "Speed": "7",
+            "Speed": "7.3",
             "Stamina": "3"
         },
         "weapon": {
             "name": "DeepSeaInterpreter",
-            "DPS": "65",
-            "Bullet Damage": "13",
+            "DPS": "60",
+            "Bullet Damage": "12",
             "Ammo": "20",
             "Bullets per sec": "5",
             "Light Melee": "63",
@@ -925,6 +928,7 @@
             "Bullet lifetime": "2",
             "Bullet gravity scale": "1",
             "Bullet range": "7000",
+            "Falloff Range": "22m-58m",
             "Burst amount": "1",
             "Burst cycletime": "0.2",
             "Recoil punch": "0",
@@ -935,7 +939,7 @@
         "stats": {
             "DPS": "79",
             "Health": "550",
-            "Speed": "6",
+            "Speed": "6.3",
             "Stamina": "3"
         },
         "weapon": {
@@ -1002,7 +1006,7 @@
             "Health Regen": "2",
             "Bullet Resist": "0",
             "Spirit Resist": "0",
-            "move Speed": "7",
+            "move Speed": "7.3",
             "Sprint Speed": "0",
             "sprint Speed scaling": "0.06",
             "Stamina": "3"
@@ -1026,6 +1030,7 @@
             "Bullet lifetime": "2",
             "Bullet gravity scale": "0",
             "Bullet range": "6",
+            "Falloff Range": "22m-58m",
             "Burst amount": "1",
             "Burst cycletime": "N/A",
             "Recoil punch": "0.15",
@@ -1036,7 +1041,7 @@
         "stats": {
             "DPS": "70",
             "Health": "500",
-            "Speed": "8",
+            "Speed": "8.3",
             "Stamina": "3"
         },
         "weapon": {
@@ -1059,7 +1064,7 @@
             "Stamina": "3"
         },
         "level up": {
-            "bullet damage": "+0.50Base",
+            "bullet damage": "+0.45Base",
             "base melee damage": "+3.4",
             "base health": "+31"
         },
@@ -1079,6 +1084,7 @@
             "Bullet lifetime": "2",
             "Bullet gravity scale": "0",
             "Bullet range": "6",
+            "Falloff Range": "22m-46m",
             "Burst amount": "1",
             "Burst cycletime": "0.400000",
             "Recoil punch": "0",
