@@ -9,7 +9,6 @@ from hero import Hero
 download_hero_info()
 
 heros = load_local_heros()
-
 # download_item_info()
 
 names = heros.keys()
@@ -59,6 +58,8 @@ for name in heros:
 
 plt.legend()
 plt.show()
+# download_hero_info()
+download_item_info()
 
     
 
