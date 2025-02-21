@@ -45,13 +45,13 @@ fn setup(
     let pressed_matl = materials.add(Color::from(YELLOW_300));
 
 
-    let files: Vec<_> = std::fs::read_dir("./assets/mm_images").unwrap().collect::<Result<_, _>>().unwrap();
+    let files: Vec<_> = std::fs::read_dir("assets/mm_images").unwrap().collect::<Result<_, _>>().unwrap();
 
     // create vector of texture handles
     let mut texture_handles:Vec<Handle<Image>> = Vec::new();
 
     // read json file
-    let json_string = std::fs::read_to_string("./assets/data/processed/heroes.json").unwrap();
+    let json_string = std::fs::read_to_string("assets/data/processed/heroes.json").unwrap();
     let heroes: serde_json::Value = serde_json::from_str(&json_string).unwrap();
     
     // list heroes
