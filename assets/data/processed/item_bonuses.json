@@ -1,0 +1,66 @@
+{
+    "EItemSlotType_WeaponMod": "",
+    "1": {
+        "m_nTier": 1,
+        "m_strValue": "6",
+        "m_ValueType": "MODIFIER_VALUE_BASEATTACK_DAMAGE_PERCENT"
+    },
+    "2": {
+        "m_nTier": 2,
+        "m_strValue": "10",
+        "m_ValueType": "MODIFIER_VALUE_BASEATTACK_DAMAGE_PERCENT"
+    },
+    "3": {
+        "m_nTier": 3,
+        "m_strValue": "14",
+        "m_ValueType": "MODIFIER_VALUE_BASEATTACK_DAMAGE_PERCENT"
+    },
+    "4": {
+        "m_nTier": 4,
+        "m_strValue": "18",
+        "m_ValueType": "MODIFIER_VALUE_BASEATTACK_DAMAGE_PERCENT"
+    },
+    "EItemSlotType_Armor": "",
+    "6": {
+        "m_nTier": 1,
+        "m_strValue": "11",
+        "m_ValueType": "MODIFIER_VALUE_BASE_HEALTH_PERCENT"
+    },
+    "7": {
+        "m_nTier": 2,
+        "m_strValue": "14",
+        "m_ValueType": "MODIFIER_VALUE_BASE_HEALTH_PERCENT"
+    },
+    "8": {
+        "m_nTier": 3,
+        "m_strValue": "17",
+        "m_ValueType": "MODIFIER_VALUE_BASE_HEALTH_PERCENT"
+    },
+    "9": {
+        "m_nTier": 4,
+        "m_strValue": "20",
+        "m_ValueType": "MODIFIER_VALUE_BASE_HEALTH_PERCENT"
+    },
+    "EItemSlotType_Tech": "",
+    "11": {
+        "m_nTier": 1,
+        "m_strValue": "4",
+        "m_ValueType": "MODIFIER_VALUE_TECH_POWER"
+    },
+    "12": {
+        "m_nTier": 2,
+        "m_strValue": "8",
+        "m_ValueType": "MODIFIER_VALUE_TECH_POWER"
+    },
+    "13": {
+        "m_nTier": 3,
+        "m_strValue": "12",
+        "m_ValueType": "MODIFIER_VALUE_TECH_POWER"
+    },
+    "14": {
+        "m_nTier": 4,
+        "m_strValue": "16",
+        "m_ValueType": "MODIFIER_VALUE_TECH_POWER"
+    },
+    "15": "]"
+}
