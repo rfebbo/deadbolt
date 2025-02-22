@@ -2,28 +2,27 @@
 //! This makes sure the depth buffer is correctly being used for opaque and transparent 2d meshes
 
 use bevy::{
-    color::palettes::css::{BLUE, GREEN, WHITE},
-    prelude::*,
-    sprite::AlphaMode2d,
-    render::camera::ScalingMode,
+    color::palettes::css::{BLUE, RED, WHITE}, 
+    input::mouse::MouseWheel, 
+    prelude::*, 
+    reflect::TypePath,
+    sprite::AlphaMode2d, 
     window::Window,
+    render::view::visibility::RenderLayers,
+    window::PrimaryWindow,
+    app::AppExit,
+    input::mouse::MouseScrollUnit
 };
 
 use std::collections::HashMap;
-use bevy::reflect::TypePath;
 use bevy_common_assets::json::JsonAssetPlugin;
 use serde;
-use bevy::{color::palettes::tailwind::*, picking::pointer::PointerInteraction, prelude::*};
 
 
-#[derive(serde::Deserialize, bevy::asset::Asset, bevy::reflect::TypePath)]
-struct Level {
-    positions: Vec<[f32; 3]>,
-    test_map: HashMap<String, i32>,
-}
 
-#[derive(serde::Deserialize, bevy::asset::Asset, bevy::reflect::TypePath, Debug)]
-struct Hero_data{
+
+#[derive(serde::Deserialize, bevy::asset::Asset, bevy::reflect::TypePath, Debug, Clone)]
+struct HeroData{
     abilities: Vec<String>,
     name: String,
     iname: String,
@@ -35,53 +34,199 @@ struct Hero_data{
 }
 
 #[derive(serde::Deserialize, Asset, TypePath)]
-struct Hero_datas {
-    heroes: Vec<Hero_data>,
+struct HeroDatas {
+    heroes: Vec<HeroData>,
 }
 
 #[derive(Resource)]
-struct LevelHandle(Handle<Level>);
+struct HeroDataHandle(Handle<HeroDatas>);
+
+
+#[derive(serde::Deserialize, bevy::asset::Asset, bevy::reflect::TypePath, Debug, Clone)]
+struct level_data{
+    m_unRequiredGold: i32,
+    m_mapBonusCurrencies: Option<HashMap<String, i32>>,
+    m_bUseStandardUpgrade: Option<bool>,
+}
+
+#[derive(serde::Deserialize, Asset, TypePath)]
+struct LevelDatas {
+    levels: HashMap<i32, level_data>,
+}
 
 #[derive(Resource)]
-struct HeroDataHandle(Handle<Hero_datas>);
+struct LevelDataHandle(Handle<LevelDatas>);
 
-
-#[derive(Resource)]
-struct ImageHandle(Handle<Image>);
 
 #[derive(Debug, Clone, Copy, Default, Eq, PartialEq, Hash, States)]
 enum AppState {
     #[default]
     Loading,
     Level,
+    UpdateHeroes,
+    DrawData,
+    ClearCamera,
 }
 // struct for hero with json data, with component
 #[derive(Component)]
 struct Hero {
     selected: bool,
+    n_souls: i32,
+    hd: HeroData,
+    dps: Option<Vec<f32>>,
+}
+
+#[derive(Component)]
+struct HeroSelectCamera;
+
+
+fn calc_dps(hero: &Hero, level_datas: &LevelDatas) -> Vec<f32> {
+    // create a vector of f32 to store the dps per level
+    let mut dps_per_level: Vec<f32> = Vec::new();
+    let mut level: i32 = 0;
+    let mut n_boons: i32 = 0;
+    let mut s: i32 = 0;
+    let damage_duration = 10_000;
+    // loop through the souls
+    while s <= hero.n_souls {
+        // check if the souls is equal to the next level
+        if s == level_datas.levels[&(level+1)].m_unRequiredGold as i32 {
+            level += 1;
+            let boon = level_datas.levels[&level].m_bUseStandardUpgrade;
+            if boon.is_some() {
+                n_boons += 1;
+            }
+        }
+
+        let mut b_damage = hero.hd.weapon["Bullet Damage"];
+
+        b_damage += n_boons as f32 * hero.hd.level_up_upgrades["MODIFIER_VALUE_BASE_BULLET_DAMAGE_FROM_LEVEL"];
+        let shot_damage = b_damage * hero.hd.weapon["Bullets"];
+        let dpm = shot_damage * hero.hd.weapon["ClipSize"];
+        let time_to_reloaded_clip = hero.hd.weapon["CycleTime"] * hero.hd.weapon["ClipSize"] + hero.hd.weapon["ReloadDuration"];
+        let mags_to_fire = (damage_duration as f32 / time_to_reloaded_clip) as i32;
+        let damage = mags_to_fire as f32 * dpm;
+        let dps = damage / damage_duration as f32;
+        dps_per_level.push(dps);
+
+        s += 1;
+    }
+
+    return dps_per_level;
+
+    
 }
 
 fn main() {
     App::new()
-    .add_plugins((DefaultPlugins, 
+    .add_plugins((DefaultPlugins.set(WindowPlugin {
+            primary_window: Some(Window {
+                // provide the ID selector string here
+                canvas: Some("#mygame-canvas".into()),
+                // ... any other window properties ...
+                ..default()
+            }),
+            ..default()
+        }), 
         MeshPickingPlugin,
-        JsonAssetPlugin::<Level>::new(&["level.json"]),
-        JsonAssetPlugin::<Hero_datas>::new(&["hero.json"]),))
-    // .add_systems(Startup, setup)
+        JsonAssetPlugin::<HeroDatas>::new(&["hero.json"]),
+        JsonAssetPlugin::<LevelDatas>::new(&["level.json"]),
+    ))
     .init_state::<AppState>()
     .add_systems(Startup, setup)
     .add_systems(Update, spawn_level.run_if(in_state(AppState::Loading)))
+    .add_systems(Update, update_heroes.run_if(in_state(AppState::UpdateHeroes)))
+    .add_systems(Update, draw_data.run_if(in_state(AppState::DrawData)))
+    .add_systems(Update, clear_camera.run_if(in_state(AppState::ClearCamera)))
+    .add_systems(Update, zoom_camera)
+    .add_systems(Update, keyboard_control)
     .run();
 }
+
+fn update_heroes(
+    mut commands: Commands,
+    mut state: ResMut<NextState<AppState>>,
+    mut h_q: Query<(&mut MeshMaterial2d<ColorMaterial>, &mut Hero)>,
+    levels: Res<LevelDataHandle>,
+    levelss: Res<Assets<LevelDatas>>,
+) {
+    let levels = levelss.get(levels.0.id()).unwrap();
+
+    let mut min_dps = 100.0;
+    for (_, mut hero) in &mut h_q {
+
+        if hero.selected {
+            hero.dps = Some(calc_dps(&hero, &levels));
+            if hero.dps.as_ref().unwrap()[0] < min_dps {
+                min_dps = hero.dps.as_ref().unwrap()[0];
+            }
+        }
+    }
+    println!("min dps: {:?}", min_dps);
+    state.set(AppState::DrawData);
+}
+
+fn clear_camera(
+    mut state: ResMut<NextState<AppState>>,
+    mut query: Query<(&mut Camera), (With<Camera2d>, Without<HeroSelectCamera>)>,
+)
+{
+    // let mut camera = query.single_mut();
+    // camera.clear_color = ClearColorConfig::None;
+
+    state.set(AppState::Level);
+
+}
+
+fn draw_data(
+    mut commands: Commands,
+    mut state: ResMut<NextState<AppState>>,
+    mut h_q: Query<(&mut MeshMaterial2d<ColorMaterial>, &mut Hero)>,
+    mut gizmos: Gizmos,
+    time: Res<Time>,
+) {
+    // clear camera ?
+    let height = 640.;
+    let width= 1200.;
+    gizmos.line_2d(Vec2::new(0.0, 0.0), Vec2::new(width, 0.0), BLUE);
+    gizmos.line_2d(Vec2::new(0.0, 0.0), Vec2::new(0.0, height), RED);
+
+    for (_, mut hero) in &mut h_q {
+
+        if hero.selected {
+            let xscale = 0.01;
+            let yscale = 10.0;
+            let y_start = 10.0;
+            let mut i = 0;
+            let mut last_dps = 0.0;
+            for dps in hero.dps.as_ref().unwrap() {
+                if last_dps == 0.0 {
+                    last_dps = *dps;
+                    i += 1;
+                    continue;
+                }
+                let x1 = (i - 1) as f32 * xscale;
+                let y1 = (last_dps - y_start) * yscale;
+                let x2 = i as f32 * xscale;
+                let y2 = (dps - y_start) * yscale;
+
+                gizmos.line_2d(Vec2::new(x1, y1), Vec2::new(x2, y2), WHITE);
+                last_dps = *dps;
+
+
+                i += 1;
+            }
+        }
+    }
+    // state.set(AppState::ClearCamera);
+}
+
 
 fn spawn_level(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
-    // level: Res<LevelHandle>,
-    // tree: Res<ImageHandle>,
-    // mut levels: ResMut<Assets<Level>>,
     heroes: Res<HeroDataHandle>,
-    mut heroess: ResMut<Assets<Hero_datas>>,
+    mut heroess: ResMut<Assets<HeroDatas>>,
     mut state: ResMut<NextState<AppState>>,
     asset_server: Res<AssetServer>,
     mut materials: ResMut<Assets<ColorMaterial>>,
@@ -89,19 +234,13 @@ fn spawn_level(
     if let Some(heroes) = heroess.remove(heroes.0.id()) {
 
         let mesh_handle = meshes.add(Rectangle::from_size(Vec2::splat(256.0)));
-        // for position in level.positions {
-        //     commands.spawn((
-        //         Sprite::from_image(tree.0.clone()),
-        //         Transform::from_translation(position.into()),
-        //     ));
-        // }
-
-        // println!("test_map: {:?}", level.test_map["test_key"]);
+ 
         let mut i: i32 = 0;
-        for hero in heroes.heroes {
+        let n_heores = heroes.heroes.len() as i32;
+        for hero in &heroes.heroes {
             // println!("hero: {:?}", hero);
 
-            let texture_handle:Handle<Image> = asset_server.load(hero.image_location);
+            let texture_handle:Handle<Image> = asset_server.load(hero.image_location.clone());
             let material = materials.add(ColorMaterial {
                 color: WHITE.with_alpha(0.15).into(),
                 alpha_mode: AlphaMode2d::Blend,
@@ -120,7 +259,8 @@ fn spawn_level(
                 texture: Some(texture_handle.clone()),
             });
     
-            let x = i as f32 * 256.0 - 3000.0;
+            let width = n_heores as f32 * 256.0;
+            let x = i as f32 * 256.0 - width / 2.0;
             let y = 2000.0;
             let z = 1.0;
     
@@ -129,13 +269,17 @@ fn spawn_level(
                 MeshMaterial2d(material.clone()),
                 Transform::from_xyz(x, y, z),
                 Hero {
+                    n_souls: 47000,
                     selected: false,
+                    hd: hero.clone(),
+                    dps: None,
                 },
+                RenderLayers::layer(1),
             ))
-            .observe(update_material_on::<Pointer<Over>>(hover_mat.clone()))
-            .observe(update_material_on::<Pointer<Out>>(material.clone()))
-            .observe(update_material_on::<Pointer<Up>>(hover_mat.clone()))
-            .observe(select_hero::<Pointer<Down>>(selected_mat.clone()));
+            .observe(hero_selector::<Pointer<Over>>(hover_mat.clone()))
+            .observe(hero_selector::<Pointer<Out>>(material.clone()))
+            .observe(hero_selector::<Pointer<Up>>(hover_mat.clone()))
+            .observe(hero_selector::<Pointer<Down>>(selected_mat.clone()));
 
             i += 1;
             
@@ -143,228 +287,129 @@ fn spawn_level(
 
         state.set(AppState::Level);
     }
-    // list heroes
-    // let hero_datas = heroes.0.clone();
-    // println!("hero_datas: {:?}", hero_datas);
-    // for key in heroes.as_object().unwrap().keys() {
-    //     // println!("key: {}", key);
-    //     // print hero name
-    //     let name = heroes[key]["name"].as_str().unwrap();
-    //     // print the name excluding the first 5 characters
-    //     // println!("name: {}", &name[5..]);
-        
-
-    //     let mut img_found = false;
-    //     for file in &files {
-    //         let path = file.path();
-    //         let file_name = path.file_name().unwrap().to_str().unwrap().to_string();
-    //         // println!("file_name: {}", file_name);
-    //         // if file_name contains key
-    //         if !file_name.contains(&name[5..]) {
-    //             continue;
-    //         }
-    //         img_found = true;
-    //         let texture_handle:Handle<Image> = asset_server.load(format!("mm_images/{}", file_name));
-    //         texture_handles.push(texture_handle);
-    //     }
-    //     if !img_found {
-    //         println!("image not found for hero: {}", key);
-    //     }
-    // }
-
-    // state.set(AppState::Level);
 }
 
 fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
 
-    let level = LevelHandle(asset_server.load("trees.level.json"));
-    commands.insert_resource(level);
-    let tree = ImageHandle(asset_server.load("tree.png"));
-    commands.insert_resource(tree);
+
     let hero_data = HeroDataHandle(asset_server.load("data/processed/heroes.json"));
     commands.insert_resource(hero_data);
 
-    // print test_map
+    let level_data = LevelDataHandle(asset_server.load("data/processed/level_bonuses.json"));
+    commands.insert_resource(level_data);
 
-    // commands.spawn((Camera2d, Msaa::Off));
+    commands.spawn((Camera2d,
+        Transform::from_xyz(600.0, 320.0, 0.0),
+        Projection::Orthographic(OrthographicProjection {
+            // scaling_mode: ScalingMode::FixedVertical { viewport_height: 2500.0 },
+            scale: 1.0,
+            ..OrthographicProjection::default_2d()
+        }),
+        Camera {
+            order: 1,
+            clear_color: ClearColorConfig::None,
+            ..Camera::default()
+        },
+        RenderLayers::from_layers(&[0])
+    ));
     commands.spawn((Camera2d,
         Transform::from_xyz(0.0, 0.0, 0.0),
         Projection::Orthographic(OrthographicProjection {
-            scaling_mode: ScalingMode::FixedVertical { viewport_height: 5000.0 },
+            // scaling_mode: ScalingMode::FixedVertical { viewport_height: 2500.0 },
+            scale: 7.0,
             ..OrthographicProjection::default_2d()
-        })
+        }),
+        Camera {
+            order: 0,
+            ..Camera::default()
+        },
+        RenderLayers::from_layers(&[1]),
+        HeroSelectCamera
     ));
 }
 
-// fn setup(
-//     mut commands: Commands,
-//     asset_server: Res<AssetServer>,
-//     mut meshes: ResMut<Assets<Mesh>>,
-//     mut materials: ResMut<Assets<ColorMaterial>>,
-// ) {
-//     commands.spawn((Camera2d,
-//         Transform::from_xyz(0.0, 0.0, 0.0),
-//         Projection::Orthographic(OrthographicProjection {
-//             scaling_mode: ScalingMode::FixedVertical { viewport_height: 5000.0 },
-//             ..OrthographicProjection::default_2d()
-//         })
-//     ));
-
-//     let white_matl = materials.add(Color::WHITE);
-//     let ground_matl = materials.add(Color::from(GRAY_300));
-//     let hover_matl = materials.add(Color::from(CYAN_300).with_alpha(0.5));
-//     let pressed_matl = materials.add(Color::from(YELLOW_300));
-
-
-//     // let files: Vec<_> = std::fs::read_dir("./assets/mm_images/").unwrap().collect::<Result<_, _>>().unwrap();
-
-    // create vector of texture handles
-    // let mut texture_handles:Vec<Handle<Image>> = Vec::new();
-
-    // // read json file
-    // let json_string = std::fs::read_to_string("assets/data/processed/heroes.json").unwrap();
-    // let heroes: serde_json::Value = serde_json::from_str(&json_string).unwrap();
-    
-    // // list heroes
-    // for key in heroes.as_object().unwrap().keys() {
-    //     // println!("key: {}", key);
-    //     // print hero name
-    //     let name = heroes[key]["name"].as_str().unwrap();
-    //     // print the name excluding the first 5 characters
-    //     // println!("name: {}", &name[5..]);
-        
-
-    //     let mut img_found = false;
-    //     for file in &files {
-    //         let path = file.path();
-    //         let file_name = path.file_name().unwrap().to_str().unwrap().to_string();
-    //         // println!("file_name: {}", file_name);
-    //         // if file_name contains key
-    //         if !file_name.contains(&name[5..]) {
-    //             continue;
-    //         }
-    //         img_found = true;
-    //         let texture_handle:Handle<Image> = asset_server.load(format!("mm_images/{}", file_name));
-    //         texture_handles.push(texture_handle);
-    //     }
-    //     if !img_found {
-    //         println!("image not found for hero: {}", key);
-    //     }
-    // }
-
-
-
-    // // list file in mm_images folder
-
-
-    // let mesh_handle = meshes.add(Rectangle::from_size(Vec2::splat(256.0)));
-
-
-
-    // for i in 0..texture_handles.len() {
-    //     let texture_handle = texture_handles[i].clone();
-    //     let material = materials.add(ColorMaterial {
-    //         color: WHITE.with_alpha(0.15).into(),
-    //         alpha_mode: AlphaMode2d::Blend,
-    //         texture: Some(texture_handle.clone()),
-    //     });
-
-    //     let hover_mat = materials.add(ColorMaterial {
-    //         color: WHITE.with_alpha(0.5).into(),
-    //         alpha_mode: AlphaMode2d::Blend,
-    //         texture: Some(texture_handle.clone()),
-    //     });
-
-    //     let selected_mat = materials.add(ColorMaterial {
-    //         color: WHITE.with_alpha(1.0).into(),
-    //         alpha_mode: AlphaMode2d::Blend,
-    //         texture: Some(texture_handle.clone()),
-    //     });
-
-    //     let x = i as f32 * 256.0 - 3000.0;
-    //     let y = 2000.0;
-    //     let z = 1.0;
-
-    //     commands.spawn((
-    //         Mesh2d(mesh_handle.clone()),
-    //         MeshMaterial2d(material.clone()),
-    //         Transform::from_xyz(x, y, z),
-    //         Hero {
-    //             data: heroes[i].clone(),
-    //             selected: false,
-    //         },
-    //     ))
-    //     .observe(update_material_on::<Pointer<Over>>(hover_mat.clone()))
-    //     .observe(update_material_on::<Pointer<Out>>(material.clone()))
-    //     .observe(update_material_on::<Pointer<Up>>(hover_mat.clone()))
-    //     .observe(select_hero::<Pointer<Down>>(selected_mat.clone()));
-
-    // }
-// }
-
-
-// // this system check if the user clicked on any of the meshes
-// fn mouse_input_system(
-//     mut commands: Commands,
-//     buttons: Res<ButtonInput<MouseButton>>,
-//     mut query: Query<(Entity, &Transform, &Mesh2d)>,
-// ) {
-//     if buttons.just_pressed(MouseButton::Left) {
-//         let window = windows.get_primary().unwrap();
-//         let cursor_position = window.cursor_position().unwrap();
-//         let cursor_position = Vec2::new(cursor_position.x as f32, cursor_position.y as f32);
-
-//         for (entity, transform, mesh) in query.iter() {
-//             let mesh = mesh.0.clone();
-//             let mesh = mesh.read().unwrap();
-//             let mesh = mesh.as_ref().unwrap();
-//             let mesh = mesh.downcast_ref::<Rectangle>().unwrap();
-
-//             let size = mesh.size;
-//             let half_size = size / 2.0;
-//             let min = transform.translation - half_size.extend(0.0);
-//             let max = transform.translation + half_size.extend(0.0);
-
-//             if cursor_position.x >= min.x
-//                 && cursor_position.x <= max.x
-//                 && cursor_position.y >= min.y
-//                 && cursor_position.y <= max.y
-//             {
-//                 commands.entity(entity).despawn();
-//             }
-//         }
-//     }
-// }
-
-/// Returns an observer that updates the entity's material to the one specified.
-fn update_material_on<E>(
+fn hero_selector<E>(
     new_material: Handle<ColorMaterial>,
-) -> impl Fn(Trigger<E>, Query<(&mut MeshMaterial2d<ColorMaterial>, &mut Hero)>) {
+) -> impl Fn(Trigger<E>, Query<(&mut MeshMaterial2d<ColorMaterial>, &mut Hero)>, ResMut<NextState<AppState>>) {
     // An observer closure that captures `new_material`. We do this to avoid needing to write four
     // versions of this observer, each triggered by a different event and with a different hardcoded
     // material. Instead, the event type is a generic, and the material is passed in.
-    move |trigger, mut query| {
+    move |trigger, mut query, mut state| {
+        let event = trigger.event_type().index();
         if let Ok((mut material, mut hero)) = query.get_mut(trigger.entity()) {
+            if event == 344 {
+                hero.selected = !hero.selected;
+            }
             if !hero.selected {
-                material.0 = new_material.clone();
+                if event == 340 { //hover
+                    material.0 = new_material.clone();
+                }
+                else if event == 342 {
+                    material.0 = new_material.clone();
+                }
+            } else {
+                if event == 344 {
+                    state.set(AppState::UpdateHeroes);
+                    material.0 = new_material.clone();
+                }
+                
             }
 
         }
     }
 }
 
-fn select_hero<E>(
-    new_material: Handle<ColorMaterial>,
-) -> impl Fn(Trigger<E>, Query<(&mut MeshMaterial2d<ColorMaterial>, &mut Hero)>) {
-    // An observer closure that captures `new_material`. We do this to avoid needing to write four
-    // versions of this observer, each triggered by a different event and with a different hardcoded
-    // material. Instead, the event type is a generic, and the material is passed in.
-    move |trigger, mut query| {
-        if let Ok((mut material, mut hero)) = query.get_mut(trigger.entity()) {
-            hero.selected = !hero.selected;
-            if hero.selected {
-                material.0 = new_material.clone();
+
+fn zoom_camera(
+    mut query: Query<(&mut OrthographicProjection, &mut Transform), (With<Camera2d>, Without<HeroSelectCamera>)>,
+    mut evr_scroll: EventReader<MouseWheel>,
+    q_windows: Query<&Window, With<PrimaryWindow>>,
+) {
+    
+    for ev in evr_scroll.read() {
+        let position = q_windows.single().cursor_position();
+        if position.is_none() {
+            return;
+        }
+        let position = position.unwrap();
+        let h_height = q_windows.single().height() / 2.0;
+        let h_width = q_windows.single().width() / 2.0;
+
+        let zoom_speed = 15.0;
+        // calculate distance from center of screen
+        let distancex = ((position.x - h_width) / h_width).abs();
+        let distancey = ((position.y - h_height) / h_height).abs();
+        let (mut projection, mut transform) = query.single_mut();
+        match ev.unit {
+            MouseScrollUnit::Line => {
+                // println!("position: {:?}", position);
+                projection.scale -= ev.y / 100.0;
+                if position.y > h_height {
+                    transform.translation.y -= ev.y * zoom_speed * distancey;
+                } else {
+                    transform.translation.y += ev.y * zoom_speed * distancey;
+                }
+                if position.x > h_width {
+                    transform.translation.x += ev.y * zoom_speed * distancex;
+                } else {
+                    transform.translation.x -= ev.y * zoom_speed * distancex;
+                }
             }
+            MouseScrollUnit::Pixel => {
+                println!("Scroll (pixel units): vertical: {}, horizontal: {}", ev.y, ev.x);
+            }
+        }
+    }
+    
+}
+
+fn keyboard_control(
+    keys: Res<ButtonInput<KeyCode>>,
+    mut exit: EventWriter<AppExit>
+) {
+    if keys.pressed(KeyCode::KeyW) {
+        if keys.pressed(KeyCode::ControlLeft){
+            exit.send(AppExit::Success);
         }
     }
 }
