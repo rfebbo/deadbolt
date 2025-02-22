@@ -1,6 +1,3 @@
-//! This example is used to test how transforms interact with alpha modes for [`Mesh2d`] entities with a [`MeshMaterial2d`].
-//! This makes sure the depth buffer is correctly being used for opaque and transparent 2d meshes
-
 use bevy::{
     color::palettes::css::{BLUE, RED, WHITE}, 
     input::mouse::MouseWheel, 
@@ -66,7 +63,7 @@ enum AppState {
     Level,
     UpdateHeroes,
     DrawData,
-    ClearCamera,
+    MoveCamera,
 }
 // struct for hero with json data, with component
 #[derive(Component)]
@@ -140,6 +137,7 @@ fn main() {
     .add_systems(Update, spawn_level.run_if(in_state(AppState::Loading)))
     .add_systems(Update, update_heroes.run_if(in_state(AppState::UpdateHeroes)))
     .add_systems(Update, draw_data.run_if(in_state(AppState::DrawData)))
+    .add_systems(Update, move_camera.run_if(in_state(AppState::MoveCamera)))
     .add_systems(Update, zoom_camera)
     .add_systems(Update, keyboard_control)
     .run();
@@ -277,7 +275,7 @@ fn spawn_level(
             
         }
 
-        state.set(AppState::Level);
+        state.set(AppState::MoveCamera);
     }
 }
 
@@ -291,7 +289,7 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.insert_resource(level_data);
 
     commands.spawn((Camera2d,
-        Transform::from_xyz(600.0, 320.0, 0.0),
+        Transform::from_xyz(0.0, 0.0, 0.0),
         Projection::Orthographic(OrthographicProjection {
             // scaling_mode: ScalingMode::FixedVertical { viewport_height: 2500.0 },
             scale: 1.0,
@@ -318,6 +316,18 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
         RenderLayers::from_layers(&[1]),
         HeroSelectCamera
     ));
+}
+
+fn move_camera(
+    mut state: ResMut<NextState<AppState>>,
+    mut query: Query<&mut Transform, (With<Camera2d>, Without<HeroSelectCamera>)>,
+)
+{
+    for mut transform in query.iter_mut() {
+        transform.translation.x = 600.0;
+        transform.translation.y = 320.0;
+    }
+    state.set(AppState::Level);
 }
 
 fn hero_selector<E>(
