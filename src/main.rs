@@ -71,6 +71,7 @@ enum AppState {
 #[derive(Component)]
 struct Hero {
     selected: bool,
+    highlighted: bool,
     n_souls: i32,
     hd: HeroData,
     dps: Option<Vec<f32>>,
@@ -210,7 +211,12 @@ fn draw_data(
                 let x2 = i as f32 * xscale;
                 let y2 = (dps - y_start) * yscale;
 
-                gizmos.line_2d(Vec2::new(x1, y1), Vec2::new(x2, y2), WHITE);
+                if hero.highlighted {
+                    gizmos.line_2d(Vec2::new(x1, y1), Vec2::new(x2, y2), WHITE);
+                } else {
+                    gizmos.line_2d(Vec2::new(x1, y1), Vec2::new(x2, y2), WHITE.with_alpha(0.5));
+                }
+                // gizmos.line_2d(Vec2::new(x1, y1), Vec2::new(x2, y2), WHITE);
                 last_dps = *dps;
 
 
@@ -271,6 +277,7 @@ fn spawn_level(
                 Hero {
                     n_souls: 47000,
                     selected: false,
+                    highlighted: false,
                     hd: hero.clone(),
                     dps: None,
                 },
@@ -336,6 +343,7 @@ fn hero_selector<E>(
     // material. Instead, the event type is a generic, and the material is passed in.
     move |trigger, mut query, mut state| {
         let event = trigger.event_type().index();
+        // println!("event: {:?}", event);
         if let Ok((mut material, mut hero)) = query.get_mut(trigger.entity()) {
             if event == 344 {
                 hero.selected = !hero.selected;
@@ -346,14 +354,22 @@ fn hero_selector<E>(
                 }
                 else if event == 342 {
                     material.0 = new_material.clone();
+                    hero.highlighted = false;
                 }
             } else {
                 if event == 344 {
                     state.set(AppState::UpdateHeroes);
                     material.0 = new_material.clone();
                 }
+                else if event == 340 { //hover
+                    hero.highlighted = true;
+                }
+                else if event == 342 {
+                    hero.highlighted = false;
+                }
                 
             }
+            // println!("hero: {:?} highlighted {:?}", hero.hd.name, hero.highlighted);
 
         }
     }
