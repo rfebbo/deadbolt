@@ -11,7 +11,9 @@ use bevy::{
     render::view::visibility::RenderLayers,
     window::PrimaryWindow,
     app::AppExit,
-    input::mouse::MouseScrollUnit
+    input::mouse::MouseScrollUnit,
+    winit::WinitSettings,
+
 };
 
 use std::collections::HashMap;
@@ -123,7 +125,7 @@ fn main() {
     .add_plugins((DefaultPlugins.set(WindowPlugin {
             primary_window: Some(Window {
                 // provide the ID selector string here
-                canvas: Some("#mygame-canvas".into()),
+                // canvas: Some("#mygame-canvas".into()),
                 // ... any other window properties ...
                 ..default()
             }),
@@ -134,11 +136,12 @@ fn main() {
         JsonAssetPlugin::<LevelDatas>::new(&["level.json"]),
     ))
     .init_state::<AppState>()
+    .insert_resource(WinitSettings::desktop_app())
+
     .add_systems(Startup, setup)
     .add_systems(Update, spawn_level.run_if(in_state(AppState::Loading)))
     .add_systems(Update, update_heroes.run_if(in_state(AppState::UpdateHeroes)))
     .add_systems(Update, draw_data.run_if(in_state(AppState::DrawData)))
-    .add_systems(Update, clear_camera.run_if(in_state(AppState::ClearCamera)))
     .add_systems(Update, zoom_camera)
     .add_systems(Update, keyboard_control)
     .run();
@@ -162,17 +165,6 @@ fn update_heroes(
     state.set(AppState::DrawData);
 }
 
-fn clear_camera(
-    mut state: ResMut<NextState<AppState>>,
-    mut query: Query<(&mut Camera), (With<Camera2d>, Without<HeroSelectCamera>)>,
-)
-{
-    // let mut camera = query.single_mut();
-    // camera.clear_color = ClearColorConfig::None;
-
-    state.set(AppState::Level);
-
-}
 
 fn draw_data(
     mut commands: Commands,
@@ -278,9 +270,9 @@ fn spawn_level(
                 },
                 RenderLayers::layer(1),
             ))
-            .observe(hero_selector::<Pointer<Over>>(hover_mat.clone()))
-            .observe(hero_selector::<Pointer<Out>>(material.clone()))
-            .observe(hero_selector::<Pointer<Up>>(hover_mat.clone()))
+            .observe(hero_hover::<Pointer<Over>>(hover_mat.clone()))
+            .observe(hero_unhover::<Pointer<Out>>(material.clone()))
+            .observe(hero_hover::<Pointer<Up>>(hover_mat.clone()))
             .observe(hero_selector::<Pointer<Down>>(selected_mat.clone()));
 
             i += 1;
@@ -337,34 +329,55 @@ fn hero_selector<E>(
     // versions of this observer, each triggered by a different event and with a different hardcoded
     // material. Instead, the event type is a generic, and the material is passed in.
     move |trigger, mut query, mut state| {
-        let event = trigger.event_type().index();
+        
+        
         // println!("event: {:?}", event);
+        
         if let Ok((mut material, mut hero)) = query.get_mut(trigger.entity()) {
-            if event == 344 {
-                hero.selected = !hero.selected;
-            }
-            if !hero.selected {
-                if event == 340 { //hover
-                    material.0 = new_material.clone();
-                }
-                else if event == 342 {
-                    material.0 = new_material.clone();
-                    hero.highlighted = false;
-                }
-            } else {
-                if event == 344 {
-                    state.set(AppState::UpdateHeroes);
-                    material.0 = new_material.clone();
-                }
-                else if event == 340 { //hover
-                    hero.highlighted = true;
-                }
-                else if event == 342 {
-                    hero.highlighted = false;
-                }
-                
+            
+            hero.selected = !hero.selected;
+            if hero.selected {
+                state.set(AppState::UpdateHeroes);
+                material.0 = new_material.clone();
             }
             // println!("hero: {:?} highlighted {:?}", hero.hd.name, hero.highlighted);
+
+        }
+    }
+}
+
+fn hero_hover<E>(
+    new_material: Handle<ColorMaterial>,
+) -> impl Fn(Trigger<E>, Query<(&mut MeshMaterial2d<ColorMaterial>, &mut Hero)>, ResMut<NextState<AppState>>) {
+    // An observer closure that captures `new_material`. We do this to avoid needing to write four
+    // versions of this observer, each triggered by a different event and with a different hardcoded
+    // material. Instead, the event type is a generic, and the material is passed in.
+    move |trigger, mut query, mut state| {
+        
+        if let Ok((mut material, mut hero)) = query.get_mut(trigger.entity()) {
+            
+            hero.highlighted = true;
+            if !hero.selected {
+                material.0 = new_material.clone();
+            }
+
+        }
+    }
+}
+
+fn hero_unhover<E>(
+    new_material: Handle<ColorMaterial>,
+) -> impl Fn(Trigger<E>, Query<(&mut MeshMaterial2d<ColorMaterial>, &mut Hero)>, ResMut<NextState<AppState>>) {
+    // An observer closure that captures `new_material`. We do this to avoid needing to write four
+    // versions of this observer, each triggered by a different event and with a different hardcoded
+    // material. Instead, the event type is a generic, and the material is passed in.
+    move |trigger, mut query, mut state| {
+        if let Ok((mut material, mut hero)) = query.get_mut(trigger.entity()) {
+            
+            hero.highlighted = false;
+            if !hero.selected {
+                material.0 = new_material.clone();
+            }
 
         }
     }
@@ -376,12 +389,16 @@ fn zoom_camera(
     mut evr_scroll: EventReader<MouseWheel>,
     q_windows: Query<&Window, With<PrimaryWindow>>,
 ) {
-    
+    // print error
     for ev in evr_scroll.read() {
+        // println!("scroll: {:?}", ev);
         let position = q_windows.single().cursor_position();
         if position.is_none() {
+            println!("no position");
+            panic!("no position");
             return;
         }
+
         let position = position.unwrap();
         let h_height = q_windows.single().height() / 2.0;
         let h_width = q_windows.single().width() / 2.0;
@@ -393,7 +410,8 @@ fn zoom_camera(
         let (mut projection, mut transform) = query.single_mut();
         match ev.unit {
             MouseScrollUnit::Line => {
-                // println!("position: {:?}", position);
+                println!("Scroll (pixel units): vertical: {}, horizontal: {}", ev.y, ev.x);
+                println!("position: {:?}", position);
                 projection.scale -= ev.y / 100.0;
                 if position.y > h_height {
                     transform.translation.y -= ev.y * zoom_speed * distancey;
@@ -408,6 +426,17 @@ fn zoom_camera(
             }
             MouseScrollUnit::Pixel => {
                 println!("Scroll (pixel units): vertical: {}, horizontal: {}", ev.y, ev.x);
+                projection.scale -= ev.y * 0.0001;
+                if position.y > h_height {
+                    transform.translation.y -= ev.y * zoom_speed * distancey * 0.005;
+                } else {
+                    transform.translation.y += ev.y * zoom_speed * distancey * 0.005;
+                }
+                if position.x > h_width {
+                    transform.translation.x += ev.y * zoom_speed * distancex * 0.005;
+                } else {
+                    transform.translation.x -= ev.y * zoom_speed * distancex * 0.005;
+                }
             }
         }
     }
