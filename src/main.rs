@@ -12,7 +12,6 @@ use bevy::{
     window::PrimaryWindow,
     app::AppExit,
     input::mouse::MouseScrollUnit,
-    winit::WinitSettings,
 
 };
 
@@ -125,7 +124,7 @@ fn main() {
     .add_plugins((DefaultPlugins.set(WindowPlugin {
             primary_window: Some(Window {
                 // provide the ID selector string here
-                // canvas: Some("#mygame-canvas".into()),
+                canvas: Some("#mygame-canvas".into()),
                 // ... any other window properties ...
                 ..default()
             }),
@@ -136,7 +135,6 @@ fn main() {
         JsonAssetPlugin::<LevelDatas>::new(&["level.json"]),
     ))
     .init_state::<AppState>()
-    .insert_resource(WinitSettings::desktop_app())
 
     .add_systems(Startup, setup)
     .add_systems(Update, spawn_level.run_if(in_state(AppState::Loading)))
