@@ -153,17 +153,12 @@ fn update_heroes(
 ) {
     let levels = levelss.get(levels.0.id()).unwrap();
 
-    let mut min_dps = 100.0;
     for (_, mut hero) in &mut h_q {
 
         if hero.selected {
             hero.dps = Some(calc_dps(&hero, &levels));
-            if hero.dps.as_ref().unwrap()[0] < min_dps {
-                min_dps = hero.dps.as_ref().unwrap()[0];
-            }
         }
     }
-    println!("min dps: {:?}", min_dps);
     state.set(AppState::DrawData);
 }
 
