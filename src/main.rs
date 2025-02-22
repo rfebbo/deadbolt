@@ -125,7 +125,7 @@ fn main() {
     .add_plugins((DefaultPlugins.set(WindowPlugin {
             primary_window: Some(Window {
                 // provide the ID selector string here
-                // canvas: Some("#mygame-canvas".into()),
+                canvas: Some("#mygame-canvas".into()),
                 // ... any other window properties ...
                 ..default()
             }),
@@ -395,7 +395,6 @@ fn zoom_camera(
         let position = q_windows.single().cursor_position();
         if position.is_none() {
             println!("no position");
-            panic!("no position");
             return;
         }
 
